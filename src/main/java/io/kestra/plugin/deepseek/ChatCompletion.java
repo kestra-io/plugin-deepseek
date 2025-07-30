@@ -32,13 +32,13 @@ import java.util.Objects;
             title = "Chat completion with DeepSeek",
             full = true,
             code = """
-                id: deepseek-chat
-                namespace: company.name
+                id: deepseek_chat
+                namespace: company.team
 
                 tasks:
                   - id: chat_completion
                     type: io.kestra.plugin.deepseek.ChatCompletion
-                    apiKey: '{{ secret("DEEPSEEK_API_KEY") }}'
+                    apiKey: "{{ secret('DEEPSEEK_API_KEY') }}"
                     modelName: deepseek-chat
                     messages:
                       - type: SYSTEM
