@@ -172,11 +172,15 @@ public class ChatCompletion extends Task implements RunnableTask<ChatCompletion.
                 .get("message")
                 .get("content")
                 .asText();
+            
+            String maybeSchemaString = maybeSchema.isPresent() ? maybeSchema.get() : null;
+            content = DeepseekResponseNormalizer.normalize(content, maybeSchemaString);
 
             return Output.builder()
                 .response(content)
                 .raw(response.getBody().toString())
                 .build();
+
         }
     }
 
