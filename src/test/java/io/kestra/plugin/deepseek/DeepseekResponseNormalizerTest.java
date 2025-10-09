@@ -2,12 +2,14 @@ package io.kestra.plugin.deepseek;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.kestra.core.serializers.JacksonMapper;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DeepseekResponseNormalizerTest {
-    private final ObjectMapper mapper = new ObjectMapper();
+    // Use Kestra Jackson mapper in tests too
+    private final ObjectMapper mapper = JacksonMapper.ofJson();
 
     @Test
     public void testMissingOpeningBracketMultipleObjects() throws Exception {
@@ -29,6 +31,8 @@ public class DeepseekResponseNormalizerTest {
         JsonNode node = mapper.readTree(normalized);
         assertTrue(node.isArray());
         assertEquals(1, node.size());
+        assertEquals("Only task", node.get(0).get("title").asText());
+        // reviewer suggested additional assertion
         assertEquals("Only task", node.get(0).get("title").asText());
     }
 

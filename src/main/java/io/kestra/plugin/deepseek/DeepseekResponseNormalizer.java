@@ -2,13 +2,15 @@ package io.kestra.plugin.deepseek;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.kestra.core.serializers.JacksonMapper;
 
 /**
  * Small utility to normalize DeepSeek structured JSON outputs when users requested an array.
  * This keeps parsing/repair logic in one place and makes it easy to unit-test.
  */
 public final class DeepseekResponseNormalizer {
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    // Use Kestra provided Jackson mapper
+    private static final ObjectMapper MAPPER = JacksonMapper.ofJson();
 
     private DeepseekResponseNormalizer() {
     }
