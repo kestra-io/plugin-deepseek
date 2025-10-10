@@ -110,25 +110,20 @@ public class ChatCompletion extends Task implements RunnableTask<ChatCompletion.
         var resolvedModelName = runContext.render(modelName).as(String.class).orElseThrow();
         var resolvedBaseUrl = runContext.render(baseUrl).as(String.class).orElse("https://api.deepseek.com/v1");
         var resolvedMessages = runContext.render(messages).asList(ChatMessage.class);
-        var maybeSchema = runContext.render(jsonResponseSchema).as(String.class);
+        var rSchema = runContext.render(jsonResponseSchema).as(String.class).orElse(null);
 
-        // Build messages, optionally prepend a schema-guidance system message for JSON Mode.
         List<Map<String, String>> formattedMessages = new ArrayList<>();
 
-        // If a schema is provided, add a system instruction to produce JSON only and follow the schema.
-        if (maybeSchema.isPresent() && !maybeSchema.get().isBlank()) {
-            // NOTE: JSON Mode is enabled via response_format = {"type":"json_object"}.
-            // The provided schema is used as guidance in the prompt since DeepSeek's API does not accept a server-enforced JSON Schema.
+        if (rSchema != null && !rSchema.isBlank()) {
             formattedMessages.add(Map.of(
                 "role", ChatMessageType.SYSTEM.role(),
                 "content", "You must output valid JSON only (no extra text). " +
                     "Follow this JSON Schema strictly when formatting your response. " +
                     "If a field is unknown, output a sensible empty value of the correct type. " +
-                    "JSON Schema:\n" + maybeSchema.get()
+                    "JSON Schema:\n" + rSchema
             ));
         }
 
-        // Add user/system messages from input
         formattedMessages.addAll(
             resolvedMessages.stream()
                 .map(msg -> Map.of(
@@ -138,18 +133,14 @@ public class ChatCompletion extends Task implements RunnableTask<ChatCompletion.
                 .toList()
         );
 
-        // Build request body; enable JSON Mode if schema provided.
-        var requestBodyBuilder = new java.util.LinkedHashMap<String, Object>();
-        requestBodyBuilder.put("model", resolvedModelName);
-        requestBodyBuilder.put("messages", formattedMessages);
+        var requestBody = new java.util.LinkedHashMap<String, Object>();
+        requestBody.put("model", resolvedModelName);
+        requestBody.put("messages", formattedMessages);
 
-        if (maybeSchema.isPresent() && !maybeSchema.get().isBlank()) {
+        if (rSchema != null && !rSchema.isBlank()) {
             // Enable DeepSeek JSON Mode to force valid JSON output
-            // See: https://api-docs.deepseek.com/guides/json_mode/
-            requestBodyBuilder.put("response_format", Map.of("type", "json_object"));
+            requestBody.put("response_format", Map.of("type", "json_object"));
         }
-
-        var requestBody = requestBodyBuilder;
 
         try (var client = new HttpClient(runContext, HttpConfiguration.builder().build())) {
             var request = HttpRequest.builder()
@@ -173,12 +164,17 @@ public class ChatCompletion extends Task implements RunnableTask<ChatCompletion.
                 .get("content")
                 .asText();
 
+            // Normalize if schema expects an array
+            content = DeepseekResponseNormalizer.normalize(content, rSchema);
+
             return Output.builder()
                 .response(content)
                 .raw(response.getBody().toString())
                 .build();
         }
     }
+
+    
 
     @Builder
     @Getter
