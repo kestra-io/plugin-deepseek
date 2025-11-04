@@ -1,0 +1,8 @@
+group: io.kestra.plugin.deepseek
+name: "deepseek"
+title: "Deepseek"
+description: "A plugin to use DeepSeek with Kestra."
+body: ""
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"
