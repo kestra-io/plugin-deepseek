@@ -1,8 +1,8 @@
 group: io.kestra.plugin.deepseek
 name: "deepseek"
 title: "Deepseek"
-description: "A plugin to use DeepSeek with Kestra."
-body: ""
+description: "Tasks that call DeepSeek chat models for conversational or JSON-only responses."
+body: "Use DeepSeek ChatCompletion to orchestrate chat exchanges or schema-guided JSON mode within Kestra flows. Requires `apiKey`, `modelName`, and `messages`; supports optional `baseUrl` overrides and `jsonResponseSchema` to enforce JSON formatting."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"
