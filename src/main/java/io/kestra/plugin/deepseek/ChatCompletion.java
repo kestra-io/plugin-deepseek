@@ -27,6 +27,10 @@ import java.util.Objects;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+@Schema(
+    title = "Send chat to DeepSeek",
+    description = "Calls the DeepSeek Chat Completions API with role-based messages and optional JSON Mode guidance. Uses `baseUrl` default `https://api.deepseek.com/v1` for OpenAI-compatible routing; add `jsonResponseSchema` to request JSON-only output—schema is advisory and not server-validated."
+)
 @Plugin(
     examples = {
         @Example(
@@ -80,27 +84,25 @@ import java.util.Objects;
 )
 public class ChatCompletion extends Task implements RunnableTask<ChatCompletion.Output> {
 
-    @Schema(title = "API Key", description = "The DeepSeek API key used for authentication")
+    @Schema(title = "API key", description = "DeepSeek API key used for Bearer authentication")
     @NotNull
     private Property<String> apiKey;
 
-    @Schema(title = "Model name", description = "The name of the DeepSeek model to use, e.g. `deepseek-chat` or `deepseek-coder`")
+    @Schema(title = "Model name", description = "DeepSeek model identifier such as `deepseek-chat` or `deepseek-coder`")
     @NotNull
     private Property<String> modelName;
 
-    @Schema(title = "Base URL", description = "The base URL of the DeepSeek API. Using the /v1 URL allows to be compatible with OpenAI.")
+    @Schema(title = "Base URL", description = "DeepSeek API endpoint; defaults to `https://api.deepseek.com/v1` for OpenAI-compatible clients and can point to a proxy.")
     @Builder.Default
     private Property<String> baseUrl = Property.ofValue("https://api.deepseek.com/v1");
 
-    @Schema(title = "Messages", description = "The list of messages in the conversation history")
+    @Schema(title = "Messages", description = "Ordered chat history with roles SYSTEM, USER, or ASSISTANT; rendered before sending.")
     @NotNull
     private Property<List<ChatMessage>> messages;
 
     @Schema(
         title = "JSON Response Schema",
-        description = "JSON schema (as string) to guide JSON-only output when using DeepSeek JSON Mode. " +
-            "If provided, the request sets response_format = {\"type\":\"json_object\"} and prepends a system message instructing the model to output valid JSON following the given schema. " +
-            "DeepSeek does not currently enforce server-side schema validation; the schema is used as guidance."
+        description = "Optional JSON Schema string to enable DeepSeek JSON Mode. Sets `response_format` to `json_object` and prepends a schema reminder; DeepSeek treats the schema as guidance and does not validate server-side."
     )
     private Property<String> jsonResponseSchema;
 
