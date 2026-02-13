@@ -1,8 +1,8 @@
 group: io.kestra.plugin.deepseek
 name: "deepseek"
-title: "Deepseek"
-description: "Tasks that call DeepSeek chat models for conversational or JSON-only responses."
-body: "Use DeepSeek ChatCompletion to orchestrate chat exchanges or schema-guided JSON mode within Kestra flows. Requires `apiKey`, `modelName`, and `messages`; supports optional `baseUrl` overrides and `jsonResponseSchema` to enforce JSON formatting."
+title: "Run DeepSeek chat and JSON completions"
+description: "Tasks that call DeepSeek chat models for conversational or schema-guided JSON responses."
+body: "Use DeepSeek ChatCompletion to orchestrate role-based conversations or JSON-only replies within Kestra Flows. Requires `apiKey`, `modelName`, and `messages`; defaults `baseUrl` to `https://api.deepseek.com/v1` for OpenAI-compatible routing. Add `jsonResponseSchema` to enable JSON Mode with a prepended schema reminder; DeepSeek treats the schema as guidance rather than server-side validation."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"
