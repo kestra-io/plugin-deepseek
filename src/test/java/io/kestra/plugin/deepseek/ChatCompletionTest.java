@@ -1,16 +1,19 @@
 package io.kestra.plugin.deepseek;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.kestra.core.junit.annotations.KestraTest;
-import io.kestra.core.models.property.Property;
-import io.kestra.core.runners.RunContextFactory;
-import jakarta.inject.Inject;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.kestra.core.junit.annotations.KestraTest;
+import io.kestra.core.models.property.Property;
+import io.kestra.core.runners.RunContextFactory;
+
+import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -26,16 +29,18 @@ public class ChatCompletionTest {
     @EnabledIfEnvironmentVariable(named = "DEEPSEEK_API_KEY", matches = ".*")
     @Test
     void shouldGetResultsWithChatCompletion() throws Exception {
-        var runContext = runContextFactory.of(Map.of(
-            "apiKey", DEEPSEEK_API_KEY,
-            "modelName", "deepseek-chat",
-            "messages", List.of(
-                ChatCompletion.ChatMessage.builder()
-                    .type(ChatCompletion.ChatMessageType.USER)
-                    .content("What is the capital of France? Answer just the name.")
-                    .build()
+        var runContext = runContextFactory.of(
+            Map.of(
+                "apiKey", DEEPSEEK_API_KEY,
+                "modelName", "deepseek-chat",
+                "messages", List.of(
+                    ChatCompletion.ChatMessage.builder()
+                        .type(ChatCompletion.ChatMessageType.USER)
+                        .content("What is the capital of France? Answer just the name.")
+                        .build()
+                )
             )
-        ));
+        );
 
         var task = ChatCompletion.builder()
             .apiKey(Property.ofExpression("{{ apiKey }}"))
@@ -65,17 +70,19 @@ public class ChatCompletionTest {
             }
             """;
 
-        var runContext = runContextFactory.of(Map.of(
-            "apiKey", DEEPSEEK_API_KEY,
-            "modelName", "deepseek-chat",
-            "messages", List.of(
-                ChatCompletion.ChatMessage.builder()
-                    .type(ChatCompletion.ChatMessageType.USER)
-                    .content("I recently read 'To Kill a Mockingbird' by Harper Lee. Return JSON only.")
-                    .build()
-            ),
-            "jsonResponseSchema", schema
-        ));
+        var runContext = runContextFactory.of(
+            Map.of(
+                "apiKey", DEEPSEEK_API_KEY,
+                "modelName", "deepseek-chat",
+                "messages", List.of(
+                    ChatCompletion.ChatMessage.builder()
+                        .type(ChatCompletion.ChatMessageType.USER)
+                        .content("I recently read 'To Kill a Mockingbird' by Harper Lee. Return JSON only.")
+                        .build()
+                ),
+                "jsonResponseSchema", schema
+            )
+        );
 
         var task = ChatCompletion.builder()
             .apiKey(Property.ofExpression("{{ apiKey }}"))

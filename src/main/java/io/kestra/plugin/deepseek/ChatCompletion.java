@@ -1,6 +1,14 @@
 package io.kestra.plugin.deepseek;
 
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.http.client.HttpClient;
 import io.kestra.core.http.client.configurations.HttpConfiguration;
@@ -10,17 +18,11 @@ import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.runners.RunContext;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @SuperBuilder
 @Getter
@@ -117,21 +119,25 @@ public class ChatCompletion extends Task implements RunnableTask<ChatCompletion.
         List<Map<String, String>> formattedMessages = new ArrayList<>();
 
         if (rSchema != null && !rSchema.isBlank()) {
-            formattedMessages.add(Map.of(
-                "role", ChatMessageType.SYSTEM.role(),
-                "content", "You must output valid JSON only (no extra text). " +
-                    "Follow this JSON Schema strictly when formatting your response. " +
-                    "If a field is unknown, output a sensible empty value of the correct type. " +
-                    "JSON Schema:\n" + rSchema
-            ));
+            formattedMessages.add(
+                Map.of(
+                    "role", ChatMessageType.SYSTEM.role(),
+                    "content", "You must output valid JSON only (no extra text). " +
+                        "Follow this JSON Schema strictly when formatting your response. " +
+                        "If a field is unknown, output a sensible empty value of the correct type. " +
+                        "JSON Schema:\n" + rSchema
+                )
+            );
         }
 
         formattedMessages.addAll(
             resolvedMessages.stream()
-                .map(msg -> Map.of(
-                    "role", msg.type().role(),
-                    "content", Objects.toString(msg.content(), "")
-                ))
+                .map(
+                    msg -> Map.of(
+                        "role", msg.type().role(),
+                        "content", Objects.toString(msg.content(), "")
+                    )
+                )
                 .toList()
         );
 
@@ -175,8 +181,6 @@ public class ChatCompletion extends Task implements RunnableTask<ChatCompletion.
                 .build();
         }
     }
-
-    
 
     @Builder
     @Getter

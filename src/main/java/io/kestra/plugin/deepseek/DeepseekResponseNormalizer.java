@@ -2,6 +2,7 @@ package io.kestra.plugin.deepseek;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.kestra.core.serializers.JacksonMapper;
 
 /**
@@ -18,7 +19,7 @@ public final class DeepseekResponseNormalizer {
     /**
      * Normalize a raw model response when the provided schema expects a JSON array.
      *
-     * @param content     raw string returned by DeepSeek (may be malformed)
+     * @param content raw string returned by DeepSeek (may be malformed)
      * @param maybeSchema JSON schema string provided by the user (may be null)
      * @return normalized content (unchanged if no normalization applied)
      */
