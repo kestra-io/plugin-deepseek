@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @Getter
@@ -88,24 +89,29 @@ public class ChatCompletion extends Task implements RunnableTask<ChatCompletion.
 
     @Schema(title = "API key", description = "DeepSeek API key used for Bearer authentication")
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> apiKey;
 
     @Schema(title = "Model name", description = "DeepSeek model identifier such as `deepseek-chat` or `deepseek-coder`")
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> modelName;
 
     @Schema(title = "Base URL", description = "DeepSeek API endpoint; defaults to `https://api.deepseek.com/v1` for OpenAI-compatible clients and can point to a proxy.")
     @Builder.Default
+    @PluginProperty(group = "connection")
     private Property<String> baseUrl = Property.ofValue("https://api.deepseek.com/v1");
 
     @Schema(title = "Messages", description = "Ordered chat history with roles SYSTEM, USER, or ASSISTANT; rendered before sending.")
     @NotNull
+    @PluginProperty(group = "main")
     private Property<List<ChatMessage>> messages;
 
     @Schema(
         title = "JSON Response Schema",
         description = "Optional JSON Schema string to enable DeepSeek JSON Mode. Sets `response_format` to `json_object` and prepends a schema reminder; DeepSeek treats the schema as guidance and does not validate server-side."
     )
+    @PluginProperty(group = "connection")
     private Property<String> jsonResponseSchema;
 
     @Override
