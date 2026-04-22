@@ -89,7 +89,7 @@ public class ChatCompletion extends Task implements RunnableTask<ChatCompletion.
 
     @Schema(title = "API key", description = "DeepSeek API key used for Bearer authentication")
     @NotNull
-    @PluginProperty(group = "main")
+    @PluginProperty(group = "main", secret = true)
     private Property<String> apiKey;
 
     @Schema(title = "Model name", description = "DeepSeek model identifier such as `deepseek-chat` or `deepseek-coder`")
