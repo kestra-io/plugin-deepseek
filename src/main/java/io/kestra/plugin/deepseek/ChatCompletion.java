@@ -69,7 +69,8 @@ import io.kestra.core.models.annotations.PluginProperty;
                     modelName: deepseek-chat
                     messages:
                       - type: USER
-                        content: Extract the book information from: "I recently read 'To Kill a Mockingbird' by Harper Lee." Return JSON only.
+                        content: |
+                          Extract the book information from: "I recently read 'To Kill a Mockingbird' by Harper Lee." Return JSON only.
                     jsonResponseSchema: |
                       {
                         "type": "object",
@@ -191,7 +192,10 @@ public class ChatCompletion extends Task implements RunnableTask<ChatCompletion.
     @Builder
     @Getter
     public static class Output implements io.kestra.core.models.tasks.Output {
+        @Schema(title = "Assistant response text extracted from the completion")
         private final String response;
+
+        @Schema(title = "Raw response body returned by the DeepSeek API")
         private final String raw;
     }
 
