@@ -93,7 +93,7 @@ public class ChatCompletion extends Task implements RunnableTask<ChatCompletion.
     @PluginProperty(group = "main", secret = true)
     private Property<String> apiKey;
 
-    @Schema(title = "Model name", description = "DeepSeek model identifier such as `deepseek-chat` or `deepseek-coder`")
+    @Schema(title = "Model name", description = "DeepSeek model identifier such as `deepseek-chat` or `deepseek-reasoner`")
     @NotNull
     @PluginProperty(group = "main")
     private Property<String> modelName;
