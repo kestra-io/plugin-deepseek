@@ -1,6 +1,6 @@
 @PluginSubGroup(
-    title = "DeepSeek plugin",
-    description = "A plugin to use DeepSeek with Kestra.",
+    title = "DeepSeek",
+    description = "Call DeepSeek chat models from Kestra flows for conversational and schema-guided JSON responses.",
     categories = {
         PluginSubGroup.PluginCategory.AI
     }
